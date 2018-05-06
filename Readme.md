@@ -7,6 +7,7 @@ that it is used internally as part of a build chain and not in the scope of any
 supported product by those involved in it's production. It is recommended that
 you manage your own forked copy as this one may change to suit our build chain
 without notice, and thus should be considered unstable.
+[Docker hub entry][docker hub].
 
 Purpose
 -------
@@ -23,9 +24,10 @@ Used Works
 ----------
 
 * [gitlab sonar scanner][]: [Local readme][gitlab sonar scanner readme]
+* [Rough auditing tool for security][rats]
 
-Packages
---------
+Included Packages and Software
+------------------------------
 
 * Language support
   * gcc
@@ -40,11 +42,13 @@ Packages
   * gcovr
   * valgrind
   * vera++
-* Misc
+* Code management
   * git
 * Dependencies
-  * libexpat1-dev
-  * openjdk-8-jre-headless
+  * Rough auditing tool for security
+    * libexpat1-dev
+  * sonar-scanner
+    * openjdk-8-jre-headless
 
 LICENSE
 =======
@@ -57,6 +61,8 @@ See [LICENSE][] for more details
 
 [gitlab sonar scanner]: https://github.com/ciricihq/gitlab-sonar-scanner
 [gitlab sonar scanner readme]: ./Readme.gitlab-sonar-scanner.md
+
+[rats]: https://github.com/andrew-d/rough-auditing-tool-for-security
 
 [docker hub]: https://hub.docker.com/r/nullm/bwt-unified-build
 [LICENSE]: ./LICENSE
