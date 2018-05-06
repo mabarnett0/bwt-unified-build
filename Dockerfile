@@ -1,12 +1,32 @@
-FROM openjdk:8-jdk-alpine
-## Based on this example http://stackoverflow.com/a/40612088/865222
-ENV SONAR_SCANNER_VERSION 3.0.3.778
+FROM ubuntu:16.04
 
-RUN apk add --no-cache wget && \
-    wget https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VERSION}.zip && \
-    unzip sonar-scanner-cli-${SONAR_SCANNER_VERSION} && \
+ENV SONAR_SCANNER_VERSION 3.1.0.1141
+
+# Sonar scanner
+
+RUN apt-get update && \
+    apt-get install -y \
+        wget \
+        unzip \
+        git \
+        gcc \
+        g++ \
+        python \
+        build-essential \
+        cmake \
+        cppcheck \
+        lcov \
+        gcovr \
+        valgrind \
+        libexpat1-dev \
+        vera++ \
+        openjdk-8-jre-headless && \
+    wget https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VERSION}-linux.zip && \
+    unzip sonar-scanner-cli-${SONAR_SCANNER_VERSION}-linux.zip && \
     cd /usr/bin && ln -s /sonar-scanner-${SONAR_SCANNER_VERSION}/bin/sonar-scanner sonar-scanner && \
-    apk del wget && \
-    ln -s /usr/bin/sonar-scanner-run.sh /bin/gitlab-sonar-scanner
+    ln -s /usr/bin/sonar-scanner-run.sh /bin/gitlab-sonar-scanner && \
+    apt-get remove --purge -y wget unzip && \
+    apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY sonar-scanner-run.sh /usr/bin
