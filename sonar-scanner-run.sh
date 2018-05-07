@@ -60,6 +60,10 @@ if [ -z ${SONAR_ANALYSIS_MODE+x} ]; then
   SONAR_ANALYSIS_MODE="preview"
 fi
 
+if [ $SONAR_ANALYSIS_MODE == "issues" ]; then
+  SONAR_ANALYSIS_MODE="preview"
+fi
+
 COMMAND="$COMMAND -Dsonar.analysis.mode=$SONAR_ANALYSIS_MODE"
 if [ $SONAR_ANALYSIS_MODE == "preview" ]; then
   COMMAND="$COMMAND -Dsonar.issuesReport.console.enable=true"
@@ -86,9 +90,11 @@ if [ $SONAR_ANALYSIS_MODE == "preview" ]; then
     echo "Error: Missing env var CI_COMMIT_REF_NAME/CI_BUILD_REF_NAME"
     exit 1
   fi
-fi
-if [ $SONAR_ANALYSIS_MODE == "publish" ]; then
+elif [ $SONAR_ANALYSIS_MODE == "publish" ]; then
   unset CI_BUILD_REF
+else
+  echo "Error: Invalid SONAR_ANALYSIS_MODE: $SONAR_ANALYSIS_MODE"
+  exit 1
 fi
 
 if [ ! -z ${SONAR_DEBUG+x} ]; then
