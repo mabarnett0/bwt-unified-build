@@ -69,16 +69,29 @@ if [ $SONAR_ANALYSIS_MODE == "preview" ]; then
     COMMAND="$COMMAND -Dsonar.gitlab.project_id=$SONAR_GITLAB_PROJECT_ID"
   fi
 
-  if [ ! -z ${CI_BUILD_REF+x} ]; then
+  if [ ! -z ${CI_COMMIT_SHA+x} ]; then
+    COMMAND="$COMMAND -Dsonar.gitlab.commit_sha=$CI_COMMIT_SHA"
+  elif [ ! -z ${CI_BUILD_REF+x} ]; then
     COMMAND="$COMMAND -Dsonar.gitlab.commit_sha=$CI_BUILD_REF"
+  else
+    echo "Error: Missing env var CI_COMMIT_SHA/CI_BUILD_REF"
+    exit 1
   fi
 
-  if [ ! -z ${CI_BUILD_REF_NAME+x} ]; then
+  if [ ! -z ${CI_COMMIT_REF_NAME+x} ]; then
+    COMMAND="$COMMAND -Dsonar.gitlab.ref_name=$CI_COMMIT_REF_NAME"
+  elif [ ! -z ${CI_BUILD_REF_NAME+x} ]; then
     COMMAND="$COMMAND -Dsonar.gitlab.ref_name=$CI_BUILD_REF_NAME"
+  else
+    echo "Error: Missing env var CI_COMMIT_REF_NAME/CI_BUILD_REF_NAME"
+    exit 1
   fi
 fi
 if [ $SONAR_ANALYSIS_MODE == "publish" ]; then
   unset CI_BUILD_REF
 fi
 
+if [ ! -z ${SONAR_DEBUG+x} ]; then
+  echo "$COMMAND $1"
+fi
 $COMMAND $1
